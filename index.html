@@ -665,6 +665,133 @@
             </div>
         </div>
     </section>
+    <!-- FINAL CTA -->
+    <div class="rcw-final-cta-wrap rcw-fade-up">
+        <section class="rcw-final-cta">
+            <div class="rcw-final-content">
+                <h2 class="rcw-section-title">Ready To Launch Faster?</h2>
+                <p class="rcw-section-subtitle" style="color: #ddd;">Stop waiting months for a digital presence.</p>
+                <div class="rcw-hero-actions">
+                    <a href="#templates" class="rcw-btn rcw-btn-primary">Explore Templates</a>
+                    <button class="rcw-btn rcw-btn-ghost" onclick="rcwApp.openFormModal()">Book a Call</button>
+                </div>
+            </div>
+        </section>
+    </div>
 
+    <!-- FOOTER -->
+    <footer class="rcw-footer">
+        <div class="rcw-container">
+            <div class="rcw-footer-top">
+                <div class="rcw-footer-col" style="max-width: 300px;">
+                    <div class="rcw-footer-brand">RC<span>W</span></div>
+                    <p class="rcw-card-desc" style="margin-top: 15px;">Premium pre-built websites tailored for modern businesses. Launch in days, not months.</p>
+                </div>
+                <div class="rcw-footer-links">
+                    <div class="rcw-footer-col"><h4>Navigation</h4><ul><li><a href="#home">Home</a></li><li><a href="#templates">Templates</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#pricing">Pricing</a></li></ul></div>
+                    <div class="rcw-footer-col"><h4>Contact</h4><ul><li><a href="https://wa.me/254795299237">WhatsApp</a></li><li><a href="mailto:renox.usa@gmail.com">Email Us</a></li></ul></div>
+                    <div class="rcw-footer-col"><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#pricing">Payment Policy</a></li></ul></div>
+                </div>
+            </div>
+            <div class="rcw-footer-bottom">&copy; <span id="rcwYear"></span> Ready Crafted Websites. All Rights Reserved.</div>
+        </div>
+    </footer>
+
+    <!-- PREVIEW MODAL -->
+    <div class="rcw-modal-overlay" id="rcwPreviewModal">
+        <div class="rcw-modal-box">
+            <button class="rcw-modal-close" onclick="rcwApp.closePreviewModal()">&times;</button>
+            <div class="rcw-preview-content" id="rcwPreviewContent"></div>
+        </div>
+    </div>
+
+    <!-- FORM MODAL -->
+    <div class="rcw-form-overlay rcw-modal-overlay" id="rcwFormModal">
+        <div class="rcw-modal-box rcw-form-box">
+            <button class="rcw-modal-close" onclick="rcwApp.closeFormModal()">&times;</button>
+            <h2 class="rcw-form-title">Submit Interest</h2>
+            <form id="rcwInterestForm" onsubmit="return rcwApp.handleFormSubmit(event)">
+                <div class="rcw-form-group"><label>Full Name *</label><input type="text" id="rcwFormName" required placeholder="John Doe"></div>
+                <div class="rcw-form-group"><label>Business Name *</label><input type="text" id="rcwFormBiz" required placeholder="Your Brand LLC"></div>
+                <div class="rcw-form-group"><label>Email Address *</label><input type="email" id="rcwFormEmail" required placeholder="john@example.com"></div>
+                <div class="rcw-form-group"><label>WhatsApp Number</label><input type="tel" id="rcwFormPhone" placeholder="+254 7952 99237"></div>
+                <div class="rcw-form-group"><label>Selected Template</label><select id="rcwFormTemplate"><option value="Not specified">Not specified / Need Help Choosing</option></select></div>
+                <div class="rcw-form-group"><label>Additional Requests</label><textarea id="rcwFormNotes" rows="3" placeholder="Tell us about your business..."></textarea></div>
+                <button type="submit" class="rcw-btn rcw-btn-primary rcw-submit-btn">🚀 Start My Website</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="rcw-toast" id="rcwToast"><span>✅</span> <span id="rcwToastMsg">Request submitted successfully!</span></div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const rcwApp = (function() {
+            const templatesData = [
+                {
+                    id: 1,
+                    title: 'Netflix Style Website',
+                    desc: 'Cinematic, modern templates for creators, brands, and digital portfolios.',
+                    industry: 'Beauty & Salon',
+                    tags: ['Gallery Showcase', 'Dark Mode Experience', 'Booking Integration System'],
+                    images: [
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293228301_zq9eqn.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293345213_i7526h.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293574071_rjy04m.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293880592_l49wah.jpg'
+                    ],
+                    previewImages: [
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292541/Screenshot_20260520_153354_2_ttlfwk.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292547/file_000000005d3471fb9dc2978fba08bb5e_rubj6n.png',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292549/file_00000000aca071fb99708b707a1b91fb_kinopb.png',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292553/file_00000000111c724395d86bac427a30e3_sfiqdq.png'
+                    ]
+                },
+                {
+                    id: 2, title: 'Bite Restaurant', desc: 'Appetizing layout for restaurants, cafes, and food brands.', industry: 'Restaurant',
+                    tags: ['Menu System', 'Reservations', 'Visual Heavy'],
+                    images: ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80','https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80','https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=800&q=80','https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80'],
+                    previewImages: []
+                },
+                {
+                    id: 3, title: 'Vogue Fashion', desc: 'Sleek, minimalist aesthetic for clothing brands.', industry: 'E-commerce',
+                    tags: ['Shop Ready', 'Minimal', 'Lookbook'],
+                    images: ['https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&q=80','https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80','https://images.unsplash.com/photo-1489987707023-af279061943e?w=800&q=80','https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800&q=80'],
+                    previewImages: []
+                },
+                {
+                    id: 4, title: 'Nexus Agency', desc: 'Professional design for marketing & digital agencies.', industry: 'Agency',
+                    tags: ['Portfolio', 'Services', 'Lead Gen'],
+                    images: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80','https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80','https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80','https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80'],
+                    previewImages: []
+                },
+                {
+                    id: 5, title: 'Estate Prime', desc: 'Luxury property listings for real estate businesses.', industry: 'Real Estate',
+                    tags: ['Property Listings', 'Maps', 'Agent Profile'],
+                    images: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80'],
+                    previewImages: []
+                },
+                {
+                    id: 6, title: 'Iron Fitness', desc: 'High-energy layout for gyms and fitness coaches.', industry: 'Fitness',
+                    tags: ['Class Schedules', 'Bold UI', 'Video Headers'],
+                    images: ['https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80','https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&q=80','https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=800&q=80','https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80'],
+                    previewImages: []
+                },
+                {
+                    id: 7, title: 'Lens Pro', desc: 'Immersive portfolio for photographers.', industry: 'Photography',
+                    tags: ['Masonry Grid', 'Client Proofing', 'Minimal'],
+                    images: ['https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&q=80','https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80','https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80','https://images.unsplash.com/photo-1554048665-8b43bd22d2ee?w=800&q=80'],
+                    previewImages: []
+                },
+                {
+                    id: 8, title: 'Corporate Elite', desc: 'Trust-building layout for law firms and consultants.', industry: 'Corporate',
+                    tags: ['Trust Factors', 'Team Profiles', 'Clean'],
+                    images: ['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80','https://images.unsplash.com/photo-1556761175-4b46a572b786?w=800&q=80','https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80','https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80'],
+                    previewImages: []
+                }
+            ];
+
+                    
     
     
