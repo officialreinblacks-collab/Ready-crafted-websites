@@ -978,30 +978,30 @@
 
             function showToast() { DOM.toast.classList.add('rcw-show', 'rcw-success'); setTimeout(() => DOM.toast.classList.remove('rcw-show'), 3500); }
 
-            function handleFormSubmit(e) {
-                e.preventDefault();
-                const formData = {
-                    full_name: document.getElementById('rcwFormName').value.trim(),
-                    business_name: document.getElementById('rcwFormBiz').value.trim(),
-                    email: document.getElementById('rcwFormEmail').value.trim(),
-                    whatsapp: document.getElementById('rcwFormPhone').value.trim(),
-                    selected_template: document.getElementById('rcwFormTemplate').value,
-                    additional_requests: document.getElementById('rcwFormNotes').value.trim()
-                };
-                if(!formData.full_name || !formData.business_name || !formData.email) { alert('Please fill in all required fields.'); return false; }
-                console.log('📧 Sending:', formData);
-                if(typeof emailjs !== 'undefined') {
-                    emailjs.send("service_3x6pyyq", "template_178yl3o", formData)
-                        .then(r => { console.log('✅ SUCCESS!', r.status); showToast(); DOM.interestForm.reset(); setTimeout(closeFormModal, 1500); })
-                        .catch(err => { console.error('❌ FAILED:', err); alert('Error sending. Check console.'); });
-                } else {
-                    console.warn('EmailJS not loaded. Form data:', formData);
-                    showToast();
-                    DOM.interestForm.reset();
-                    setTimeout(closeFormModal, 1500);
-                }
-                return false;
-            }
+function handleFormSubmit(e) {
+    e.preventDefault();
+    const formData = {
+        full_name: document.getElementById('rcwFormName').value.trim(),
+        business_name: document.getElementById('rcwFormBiz').value.trim(),
+        email: document.getElementById('rcwFormEmail').value.trim(),
+        whatsapp: document.getElementById('rcwFormPhone').value.trim(),
+        selected_template: document.getElementById('rcwFormTemplate').value,
+        additional_requests: document.getElementById('rcwFormNotes').value.trim()
+    };
+    if(!formData.full_name || !formData.business_name || !formData.email) { alert('Please fill in all required fields.'); return false; }
+    console.log('📧 Sending:', formData);
+    if(typeof emailjs !== 'undefined') {
+        emailjs.send("service_3x6pyyq", "template_hddk7oj", formData)
+            .then(r => { console.log('✅ SUCCESS!', r.status); showToast(); DOM.interestForm.reset(); setTimeout(closeFormModal, 1500); })
+            .catch(err => { console.error('❌ FAILED:', err); alert('Error sending. Check console.'); });
+    } else {
+        console.warn('EmailJS not loaded. Form data:', formData);
+        showToast();
+        DOM.interestForm.reset();
+        setTimeout(closeFormModal, 1500);
+    }
+    return false;
+}
 
             function initObservers() {
                 const fadeObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('rcw-visible'); fadeObserver.unobserve(e.target); } }); }, { threshold: 0.1 });
