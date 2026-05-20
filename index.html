@@ -1474,7 +1474,7 @@
                 }, 3500);
             }
 
-            function handleFormSubmit(e) {
+function handleFormSubmit(e) {
     e.preventDefault();
     
     const formData = {
@@ -1491,8 +1491,6 @@
         return;
     }
 
-    console.log('📧 Sending to EmailJS...', formData);
-
     emailjs.send("service_3x6pyyq", "template_hddk7oj", formData)
         .then(function(response) {
             console.log('✅ SUCCESS!', response.status);
@@ -1502,9 +1500,8 @@
         })
         .catch(function(error) {
             console.error('❌ FAILED:', error);
-            alert('Error sending email. Check console.');
         });
-            }
+}
 
                 console.log("Form Submitted:", formData);
                 
