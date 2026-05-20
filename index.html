@@ -941,6 +941,104 @@
                 });
             }
 
+                        function toggleMenu() { DOM.menuOverlay.classList.toggle('rcw-active'); DOM.menuBtn.classList.toggle('rcw-active'); DOM.body.classList.toggle('rcw-menu-open'); }
+
+            function openPreviewModal(id) {
+                const t = templatesData.find(x => x.id === id);
+                if(!t) return;
+                let previewGridHtml = '';
+                if(t.previewImages && t.previewImages.length > 0) {
+                    previewGridHtml = `<div class="rcw-preview-grid">${t.previewImages.map(img => `<div class="rcw-preview-grid-item" onclick="rcwApp.openZoom('${img}')"><img src="${img}" loading="lazy" alt="Preview"></div>`).join('')}</div>`;
+                }
+                DOM.previewContent.innerHTML = `
+                    <div class="rcw-preview-header"><h2 class="rcw-preview-title">${t.title}</h2><p class="rcw-preview-desc">${t.desc}</p></div>
+                    ${previewGridHtml}
+                    <div class="rcw-preview-description"><p>Premium cinematic website templates built for creators, brands, photographers, videographers, and digital businesses. Designed with smooth Netflix-style browsing, modern visuals, mobile optimization, and immersive media experiences that make your work stand out instantly.</p></div>
+                    <div class="rcw-preview-contact">
+                        <p>📱 <strong>WhatsApp:</strong> <a href="https://wa.me/254795299237" target="_blank">+254 7952 99237</a></p>
+                        <p>📧 <strong>Email:</strong> <a href="mailto:renox.usa@gmail.com">renox.usa@gmail.com</a></p>
+                        <p style="margin-top: 8px; font-size: 0.85rem;">We are happy to be part of your journey!</p>
+                    </div>
+                    <div class="rcw-preview-actions"><button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal('${t.title.replace(/'/g, "\\'")}'); rcwApp.closePreviewModal();">Submit Interest — ${t.title}</button></div>`;
+                DOM.previewModal.classList.add('rcw-active');
+                DOM.body.classList.add('rcw-modal-open');
+            }
+            function closePreviewModal() { DOM.previewModal.classList.remove('rcw-active'); if(!DOM.formModal.classList.contains('rcw-active')) DOM.body.classList.remove('rcw-modal-open'); }
+
+            function populateFormSelect() {
+                templatesData.forEach(t => { const opt = document.createElement('option'); opt.value = t.title; opt.textContent = t.title; DOM.formTemplateSelect.appendChild(opt); });
+            }
+
+            function openFormModal(templateName) {
+                if(templateName) DOM.formTemplateSelect.value = templateName; else DOM.formTemplateSelect.value = 'Not specified';
+                if(DOM.menuOverlay.classList.contains('rcw-active')) toggleMenu();
+                DOM.formModal.classList.add('rcw-active'); DOM.body.classList.add('rcw-modal-open');
+            }
+            function closeFormModal() { DOM.formModal.classList.remove('rcw-active'); if(!DOM.previewModal.classList.contains('rcw-active')) DOM.body.classList.remove('rcw-modal-open'); }
+
+            function showToast() { DOM.toast.classList.add('rcw-show', 'rcw-success'); setTimeout(() => DOM.toast.classList.remove('rcw-show'), 3500); }
+
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                const formData = {
+                    full_name: document.getElementById('rcwFormName').value.trim(),
+                    business_name: document.getElementById('rcwFormBiz').value.trim(),
+                    email: document.getElementById('rcwFormEmail').value.trim(),
+                    whatsapp: document.getElementById('rcwFormPhone').value.trim(),
+                    selected_template: document.getElementById('rcwFormTemplate').value,
+                    additional_requests: document.getElementById('rcwFormNotes').value.trim()
+                };
+                if(!formData.full_name || !formData.business_name || !formData.email) { alert('Please fill in all required fields.'); return false; }
+                console.log('📧 Sending:', formData);
+                if(typeof emailjs !== 'undefined') {
+                    emailjs.send("service_3x6pyyq", "template_hddk7oj", formData)
+                        .then(r => { console.log('✅ SUCCESS!', r.status); showToast(); DOM.interestForm.reset(); setTimeout(closeFormModal, 1500); })
+                        .catch(err => { console.error('❌ FAILED:', err); alert('Error sending. Check console.'); });
+                } else {
+                    console.warn('EmailJS not loaded. Form data:', formData);
+                    showToast();
+                    DOM.interestForm.reset();
+                    setTimeout(closeFormModal, 1500);
+                }
+                return false;
+            }
+
+            function initObservers() {
+                const fadeObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('rcw-visible'); fadeObserver.unobserve(e.target); } }); }, { threshold: 0.1 });
+                DOM.fadeElements.forEach(el => fadeObserver.observe(el));
+                let done = false;
+                const counterObserver = new IntersectionObserver((entries) => { if(entries[0].isIntersecting && !done) { done = true; animateCounters(); } }, { threshold: 0.5 });
+                if(DOM.counters.length) counterObserver.observe(document.getElementById('rcwTrustGrid'));
+            }
+
+            function animateCounters() {
+                DOM.counters.forEach(counter => {
+                    const target = parseInt(counter.dataset.target), suffix = counter.dataset.suffix || '', isIcon = counter.dataset.icon === 'true';
+                    if(isIcon) { setTimeout(() => counter.innerText = suffix, 1800); return; }
+                    const startTime = performance.now();
+                    function update(now) {
+                        const progress = Math.min((now - startTime) / 1800, 1);
+                        counter.innerText = Math.floor((1 - Math.pow(1 - progress, 3)) * target) + suffix;
+                        if(progress < 1) requestAnimationFrame(update); else counter.innerText = target + suffix;
+                    }
+                    requestAnimationFrame(update);
+                });
+            }
+
+            return { init, openFormModal, closeFormModal, openPreviewModal, closePreviewModal, handleFormSubmit, openZoom, closeZoom };
+        })();
+        document.addEventListener('DOMContentLoaded', rcwApp.init);
+    </script>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        (function() { emailjs.init("xw4PXGpbb_tEf_ilH"); console.log("✅ EmailJS ready"); })();
+    </script>
+</body>
+</html>
+
+
                         
                     
     
