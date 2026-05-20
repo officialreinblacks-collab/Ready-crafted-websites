@@ -791,7 +791,157 @@
                     previewImages: []
                 }
             ];
+            let carouselIntervals = {};
 
+            const DOM = {
+                body: document.body,
+                loader: document.getElementById('rcwLoader'),
+                navbar: document.getElementById('rcwNavbar'),
+                menuBtn: document.getElementById('rcwMenuBtn'),
+                menuOverlay: document.getElementById('rcwMenuOverlay'),
+                heroBg: document.getElementById('rcwHeroBg'),
+                templateGrid: document.getElementById('rcwTemplateGrid'),
+                searchInput: document.getElementById('rcwSearchInput'),
+                industryChips: document.querySelectorAll('.rcw-industry-chip'),
+                previewModal: document.getElementById('rcwPreviewModal'),
+                previewContent: document.getElementById('rcwPreviewContent'),
+                formModal: document.getElementById('rcwFormModal'),
+                formTemplateSelect: document.getElementById('rcwFormTemplate'),
+                interestForm: document.getElementById('rcwInterestForm'),
+                toast: document.getElementById('rcwToast'),
+                fadeElements: document.querySelectorAll('.rcw-fade-up'),
+                counters: document.querySelectorAll('.rcw-counter'),
+                year: document.getElementById('rcwYear'),
+                zoomOverlay: document.getElementById('rcwZoomOverlay'),
+                zoomImage: document.getElementById('rcwZoomImage')
+            };
+
+            function init() {
+                DOM.year.textContent = new Date().getFullYear();
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        DOM.loader.style.opacity = '0';
+                        setTimeout(() => DOM.loader.remove(), 500);
+                    }, 800);
+                });
+                initHeroBg();
+                renderTemplates(templatesData);
+                populateFormSelect();
+                setupEventListeners();
+                initObservers();
+            }
+
+            function initHeroBg() {
+                const heroImages = [
+                    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80',
+                    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+                    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600&q=80'
+                ];
+                heroImages.forEach((img, i) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'rcw-hero-slide';
+                    slide.style.backgroundImage = `url(${img})`;
+                    if(i===0) slide.style.opacity = '1';
+                    DOM.heroBg.appendChild(slide);
+                });
+                let currSlide = 0;
+                const slides = DOM.heroBg.querySelectorAll('.rcw-hero-slide');
+                setInterval(() => {
+                    slides[currSlide].style.opacity = '0';
+                    currSlide = (currSlide + 1) % slides.length;
+                    slides[currSlide].style.opacity = '1';
+                }, 6000);
+            }
+
+            function renderTemplates(data) {
+                Object.values(carouselIntervals).forEach(clearInterval);
+                carouselIntervals = {};
+                DOM.templateGrid.innerHTML = '';
+                if(data.length === 0) {
+                    DOM.templateGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color: #999;">No templates found.</p>';
+                    return;
+                }
+                data.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 'rcw-card rcw-fade-up rcw-visible';
+                    let imagesHtml = '', dotsHtml = '';
+                    t.images.forEach((img, i) => {
+                        imagesHtml += `<img src="${img}" class="rcw-card-img ${i===0?'rcw-active':''}" loading="lazy" alt="${t.title}">`;
+                        dotsHtml += `<div class="rcw-dot ${i===0?'rcw-active':''}" data-index="${i}"></div>`;
+                    });
+                    card.innerHTML = `
+                        <div class="rcw-card-carousel" id="carousel-${t.id}">${imagesHtml}<div class="rcw-carousel-dots">${dotsHtml}</div></div>
+                        <div class="rcw-card-body">
+                            <h3 class="rcw-card-title">${t.title}</h3>
+                            <p class="rcw-card-desc">${t.desc}</p>
+                            <div class="rcw-card-tags">${t.tags.map(tag => `<span class="rcw-tag">${tag}</span>`).join('')}</div>
+                            <div class="rcw-card-actions">
+                                <button class="rcw-btn rcw-btn-ghost" onclick="rcwApp.openPreviewModal(${t.id})">Preview</button>
+                                <button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal('${t.title.replace(/'/g, "\\'")}')">Submit</button>
+                            </div>
+                        </div>`;
+                    DOM.templateGrid.appendChild(card);
+                    initCarousel(t.id, t.images.length);
+                });
+            }
+
+            function initCarousel(id, length) {
+                const carousel = document.getElementById(`carousel-${id}`);
+                if(!carousel) return;
+                const imgs = carousel.querySelectorAll('.rcw-card-img');
+                const dots = carousel.querySelectorAll('.rcw-dot');
+                let currentIndex = 0;
+                const goToSlide = (index) => {
+                    imgs[currentIndex].classList.remove('rcw-active');
+                    dots[currentIndex].classList.remove('rcw-active');
+                    currentIndex = index;
+                    imgs[currentIndex].classList.add('rcw-active');
+                    dots[currentIndex].classList.add('rcw-active');
+                };
+                carouselIntervals[id] = setInterval(() => goToSlide((currentIndex + 1) % length), 2800);
+                dots.forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        clearInterval(carouselIntervals[id]);
+                        goToSlide(parseInt(e.target.dataset.index));
+                        setTimeout(() => { clearInterval(carouselIntervals[id]); carouselIntervals[id] = setInterval(() => goToSlide((currentIndex + 1) % length), 2800); }, 5000);
+                    });
+                });
+            }
+
+            function openZoom(src) { DOM.zoomImage.src = src; DOM.zoomOverlay.classList.add('rcw-active'); DOM.body.style.overflow = 'hidden'; }
+            function closeZoom() { DOM.zoomOverlay.classList.remove('rcw-active'); if(!DOM.previewModal.classList.contains('rcw-active') && !DOM.formModal.classList.contains('rcw-active')) DOM.body.style.overflow = ''; }
+
+            function setupEventListeners() {
+                window.addEventListener('scroll', () => {
+                    if(window.scrollY > 40) DOM.navbar.classList.add('rcw-scrolled');
+                    else DOM.navbar.classList.remove('rcw-scrolled');
+                });
+                DOM.menuBtn.addEventListener('click', toggleMenu);
+                document.querySelectorAll('.rcw-menu-link').forEach(link => {
+                    link.addEventListener('click', (e) => { if(link.getAttribute('href') && link.getAttribute('href').startsWith('#')) toggleMenu(); });
+                });
+                DOM.searchInput.addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    renderTemplates(templatesData.filter(t => t.title.toLowerCase().includes(val) || t.desc.toLowerCase().includes(val) || t.tags.some(tag => tag.toLowerCase().includes(val))));
+                });
+                DOM.industryChips.forEach(chip => {
+                    chip.addEventListener('click', (e) => {
+                        DOM.industryChips.forEach(c => c.classList.remove('rcw-active'));
+                        e.target.classList.add('rcw-active');
+                        DOM.searchInput.value = '';
+                        const filter = e.target.dataset.filter;
+                        renderTemplates(filter === 'All' ? templatesData : templatesData.filter(t => t.industry === filter));
+                        document.getElementById('templates').scrollIntoView({behavior: 'smooth'});
+                    });
+                });
+                document.getElementById('rcwIndustriesRow').addEventListener('wheel', (e) => { e.preventDefault(); e.currentTarget.scrollLeft += e.deltaY; });
+                document.querySelectorAll('.rcw-modal-overlay').forEach(o => o.addEventListener('click', (e) => { if(e.target === o) { closePreviewModal(); closeFormModal(); } }));
+                document.addEventListener('keydown', (e) => {
+                    if(e.key === 'Escape') { closeZoom(); closePreviewModal(); closeFormModal(); if(DOM.menuOverlay.classList.contains('rcw-active')) toggleMenu(); }
+                });
+            }
+
+                        
                     
     
     
