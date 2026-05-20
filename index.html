@@ -1475,16 +1475,36 @@
             }
 
             function handleFormSubmit(e) {
-                e.preventDefault();
-                
-                const formData = {
-                    name: document.getElementById('rcwFormName').value,
-                    business: document.getElementById('rcwFormBiz').value,
-                    email: document.getElementById('rcwFormEmail').value,
-                    phone: document.getElementById('rcwFormPhone').value,
-                    template: document.getElementById('rcwFormTemplate').value,
-                    notes: document.getElementById('rcwFormNotes').value
-                };
+    e.preventDefault();
+    
+    const formData = {
+        full_name: document.getElementById('rcwFormName').value.trim(),
+        business_name: document.getElementById('rcwFormBiz').value.trim(),
+        email: document.getElementById('rcwFormEmail').value.trim(),
+        whatsapp: document.getElementById('rcwFormPhone').value.trim(),
+        selected_template: document.getElementById('rcwFormTemplate').value,
+        additional_requests: document.getElementById('rcwFormNotes').value.trim()
+    };
+
+    if (!formData.full_name || !formData.business_name || !formData.email) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    console.log('📧 Sending to EmailJS...', formData);
+
+    emailjs.send("service_3x6pyyq", "template_hddk7oj", formData)
+        .then(function(response) {
+            console.log('✅ SUCCESS!', response.status);
+            showToast();
+            DOM.interestForm.reset();
+            setTimeout(() => { closeFormModal(); }, 1500);
+        })
+        .catch(function(error) {
+            console.error('❌ FAILED:', error);
+            alert('Error sending email. Check console.');
+        });
+            }
 
                 console.log("Form Submitted:", formData);
                 
