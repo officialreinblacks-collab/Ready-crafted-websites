@@ -528,5 +528,143 @@
     </style>
 </head>
 <body>
+    <!-- LOADER -->
+    <div class="rcw-loader" id="rcwLoader">
+        <div class="rcw-loader-text">RC<span>W</span></div>
+    </div>
 
+    <!-- ORBS -->
+    <div class="rcw-orbs-container">
+        <div class="rcw-orb rcw-orb-1"></div>
+        <div class="rcw-orb rcw-orb-2"></div>
+        <div class="rcw-orb rcw-orb-3"></div>
+    </div>
+
+    <!-- ZOOM OVERLAY -->
+    <div class="rcw-zoom-overlay" id="rcwZoomOverlay" onclick="rcwApp.closeZoom()">
+        <button class="rcw-zoom-close" onclick="rcwApp.closeZoom()">&times;</button>
+        <img src="" alt="Zoomed preview" id="rcwZoomImage">
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="rcw-navbar" id="rcwNavbar">
+        <div class="rcw-nav-left">
+            <button class="rcw-hamburger" id="rcwMenuBtn" aria-label="Toggle Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="rcw-nav-center">
+            <div class="rcw-nav-search">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="#999" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <input type="text" id="rcwSearchInput" placeholder="Search templates, business types...">
+            </div>
+        </div>
+        <div class="rcw-nav-right">
+            <button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal()">Book a Call</button>
+        </div>
+    </nav>
+
+    <!-- MENU OVERLAY -->
+    <div class="rcw-menu-overlay" id="rcwMenuOverlay">
+        <div class="rcw-menu-list">
+            <div class="rcw-menu-item"><a href="#home" class="rcw-menu-link" style="transition-delay: 0.05s">Home</a></div>
+            <div class="rcw-menu-item"><a href="#templates" class="rcw-menu-link" style="transition-delay: 0.10s">Templates</a></div>
+            <div class="rcw-menu-item"><a href="#industries" class="rcw-menu-link" style="transition-delay: 0.15s">Industries</a></div>
+            <div class="rcw-menu-item"><a href="#how-it-works" class="rcw-menu-link" style="transition-delay: 0.20s">How It Works</a></div>
+            <div class="rcw-menu-item"><a href="#pricing" class="rcw-menu-link" style="transition-delay: 0.25s">Pricing</a></div>
+            <div class="rcw-menu-item"><button class="rcw-menu-link" style="transition-delay: 0.30s; border:none; background:none; cursor:pointer;" onclick="rcwApp.openFormModal()">Book a Call</button></div>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="rcw-hero" id="home">
+        <div class="rcw-hero-bg" id="rcwHeroBg"></div>
+        <div class="rcw-hero-content rcw-container">
+            <div class="rcw-hero-badge">🚀 Fast Website Launch Service</div>
+            <h1 class="rcw-hero-h1">Ready Crafted <span>Websites</span></h1>
+            <p class="rcw-hero-subtitle">Launch Your Business Website in 2–3 Days — Not Months.</p>
+            <div class="rcw-hero-desc">
+                <p>Ready Crafted Websites creates premium pre-built websites tailored for modern businesses. We design and sell professionally crafted website templates that are ready for fast launch. Simply choose a template that matches your brand, and we'll work closely with you to customize your details, content, images, and branding until your website is fully polished.</p>
+                <p>Why wait months? Go live in just 2–3 days through our efficient process. We remain available for future updates at a friendly fee, building long-term relationships.</p>
+            </div>
+            <div class="rcw-hero-actions">
+                <a href="#templates" class="rcw-btn rcw-btn-primary">Explore Templates</a>
+                <button class="rcw-btn rcw-btn-ghost" onclick="rcwApp.openFormModal()">Book a Call</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEMPLATES -->
+    <section class="rcw-templates" id="templates">
+        <div class="rcw-container">
+            <h2 class="rcw-section-title rcw-fade-up">Explore • Select • Submit • Done ✅</h2>
+            <p class="rcw-section-subtitle rcw-fade-up">Fast & Easy Website Launch Process</p>
+            <div class="rcw-template-grid" id="rcwTemplateGrid"></div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="rcw-how-it-works" id="how-it-works">
+        <div class="rcw-container">
+            <h2 class="rcw-section-title rcw-fade-up">How It Works</h2>
+            <p class="rcw-section-subtitle rcw-fade-up">From selection to launch in 5 simple steps</p>
+            <div class="rcw-steps-container rcw-fade-up">
+                <div class="rcw-step"><div class="rcw-step-icon">📋<div class="rcw-step-num">1</div></div><div class="rcw-step-connector"></div><h3 class="rcw-step-title">Choose Template</h3><p class="rcw-card-desc">Find the perfect design for your brand.</p></div>
+                <div class="rcw-step"><div class="rcw-step-icon">📝<div class="rcw-step-num">2</div></div><div class="rcw-step-connector"></div><h3 class="rcw-step-title">Submit Details</h3><p class="rcw-card-desc">Send us your info and requirements.</p></div>
+                <div class="rcw-step"><div class="rcw-step-icon">💳<div class="rcw-step-num">3</div></div><div class="rcw-step-connector"></div><h3 class="rcw-step-title">Pay Deposit</h3><p class="rcw-card-desc">Secure project with 50% upfront.</p></div>
+                <div class="rcw-step"><div class="rcw-step-icon">🎨<div class="rcw-step-num">4</div></div><div class="rcw-step-connector"></div><h3 class="rcw-step-title">We Customize</h3><p class="rcw-card-desc">We tailor colors, text, and images.</p></div>
+                <div class="rcw-step"><div class="rcw-step-icon">🚀<div class="rcw-step-num">5</div></div><h3 class="rcw-step-title">Website Lives</h3><p class="rcw-card-desc">Final payment and fast launch.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAYMENT POLICY -->
+    <section class="rcw-policy" id="pricing">
+        <div class="rcw-container rcw-fade-up">
+            <h2 class="rcw-section-title">Payment & Policy</h2>
+            <div class="rcw-policy-box">
+                <p class="rcw-policy-text">To begin your project, a <strong>50% upfront deposit</strong> is required before any customization work starts. The remaining balance is paid after the website is completed and approved before final publishing or transfer.</p>
+                <div class="rcw-trust-notes">
+                    <span class="rcw-trust-pill">⚡ Fast communication</span>
+                    <span class="rcw-trust-pill">💰 Affordable modifications</span>
+                    <span class="rcw-trust-pill">🤝 Friendly support</span>
+                    <span class="rcw-trust-pill">✅ Professional workflow</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INDUSTRIES -->
+    <section class="rcw-industries" id="industries">
+        <h2 class="rcw-section-title rcw-fade-up" style="font-size: 2.5rem;">Industries We Serve</h2>
+        <p class="rcw-section-subtitle rcw-fade-up" style="margin-bottom: 20px;">Scroll to explore →</p>
+        <div class="rcw-industries-row rcw-fade-up" id="rcwIndustriesRow">
+            <button class="rcw-industry-chip rcw-active" data-filter="All">All Templates</button>
+            <button class="rcw-industry-chip" data-filter="Beauty & Salon">Beauty & Salon</button>
+            <button class="rcw-industry-chip" data-filter="Restaurant">Restaurants</button>
+            <button class="rcw-industry-chip" data-filter="E-commerce">E-commerce</button>
+            <button class="rcw-industry-chip" data-filter="Agency">Agencies</button>
+            <button class="rcw-industry-chip" data-filter="Real Estate">Real Estate</button>
+            <button class="rcw-industry-chip" data-filter="Fitness">Fitness</button>
+            <button class="rcw-industry-chip" data-filter="Photography">Photography</button>
+            <button class="rcw-industry-chip" data-filter="Corporate">Corporate</button>
+        </div>
+    </section>
+
+    <!-- TRUST -->
+    <section class="rcw-trust rcw-fade-up">
+        <div class="rcw-container">
+            <h2 class="rcw-section-title" style="margin-bottom: 40px;">Why Choose RCW</h2>
+            <div class="rcw-trust-grid" id="rcwTrustGrid">
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="3" data-suffix=" Days">0</div><div class="rcw-trust-label">Fast Delivery</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="100" data-suffix="%">0</div><div class="rcw-trust-label">Mobile Optimized</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="50" data-suffix="+">0</div><div class="rcw-trust-label">Premium Designs</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="24" data-suffix="/7">0</div><div class="rcw-trust-label">Fast Support</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="99" data-suffix="%">0</div><div class="rcw-trust-label">SEO Friendly</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="0" data-suffix="💰" data-icon="true">0</div><div class="rcw-trust-label">Affordable Maintenance</div></div>
+            </div>
+        </div>
+    </section>
+
+    
     
