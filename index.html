@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ready Crafted Websites | Fast Launch Service</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Payhip -->
+    <script type="text/javascript" src="https://payhip.com/payhip.js"></script>
+    
+    <style>
+        /* ==========================================================================
+           1. GLOBAL VARIABLES & RESET
+           ========================================================================== */
+        :root {
+            /* Color Palette */
+            --rcw-bg-base: #000000;
+            --rcw-bg-card: #111111;
+            --rcw-accent-red: #E50914;
+            --rcw-accent-glow: rgba(229, 9, 20, 0.4);
+            --rcw-accent-glow-strong: rgba(229, 9, 20, 0.7);
+            --rcw-text-pri: #FFFFFF;
+            --rcw-text-sec: #B3B3B3;
+            --rcw-text-mut: #999999;
+            --rcw-border: rgba(255, 255, 255, 0.08);
+            --rcw-border-hover: rgba(229, 9, 20, 0.4);
+            --rcw-glass-bg: rgba(17, 17, 17, 0.7);
+            
+            /* Typography */
+            --rcw-font-head: 'Bebas Neue', sans-serif;
+            --rcw-font-body: 'Inter', sans-serif;
+            
+            /* Sizing & Spacing */
+            --rcw-nav-height: 72px;
+            --rcw-max-width: 1400px;
+            --rcw-radius-sm: 8px;
+            --rcw-radius-md: 12px;
+            --rcw-radius-lg: 20px;
+            --rcw-radius-xl: 28px;
+            --rcw-section-pad: clamp(50px, 8vw, 80px) clamp(16px, 4vw, 60px);
+            
+            /* Animations */
+            --rcw-ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--rcw-bg-base);
+            color: var(--rcw-text-pri);
+            font-family: var(--rcw-font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body.rcw-menu-open, body.rcw-modal-open {
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        button { cursor: pointer; font-family: inherit; border: none; background: none; }
+        img { max-width: 100%; display: block; }
+        
+        /* Container */
+        .rcw-container {
+            max-width: var(--rcw-max-width);
+            margin: 0 auto;
+            padding: 0 clamp(16px, 4vw, 60px);
+        }
+
+        /* Utility: Fade Up Animation */
+        .rcw-fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s var(--rcw-ease), transform 0.7s var(--rcw-ease);
+            will-change: opacity, transform;
+        }
+        .rcw-fade-up.rcw-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Buttons */
+        .rcw-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s var(--rcw-ease);
+            white-space: nowrap;
+        }
+        .rcw-btn-primary {
+            background: var(--rcw-accent-red);
+            color: #FFF;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.2);
+        }
+        .rcw-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--rcw-accent-glow-strong);
+            background: #f70a16;
+        }
+        .rcw-btn-ghost {
+            background: transparent;
+            color: #FFF;
+            border: 1px solid var(--rcw-border);
+        }
+        .rcw-btn-ghost:hover {
+            transform: translateY(-2px);
+            border-color: #FFF;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Section Titles */
+        .rcw-section-title {
+            font-family: var(--rcw-font-head);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .rcw-section-subtitle {
+            text-align: center;
+            color: var(--rcw-text-mut);
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL ELEMENTS (Loader, Orbs, Toast)
+           ========================================================================== */
+        /* Loader */
+        .rcw-loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .rcw-loader-text {
+            font-family: var(--rcw-font-head);
+            font-size: 4rem;
+            letter-spacing: 4px;
+            animation: rcw-pulse 1.5s infinite alternate;
+        }
+        .rcw-loader-text span { color: var(--rcw-accent-red); }
+        @keyframes rcw-pulse {
+            0% { opacity: 0.5; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Background Orbs */
+        .rcw-orbs-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .rcw-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            animation: rcw-float linear infinite alternate;
+            will-change: transform;
+        }
+        .rcw-orb-1 {
+            width: 500px; height: 500px; background: var(--rcw-accent-red);
+            top: -100px; right: -100px; animation-duration: 12s;
+        }
+        .rcw-orb-2 {
+            width: 350px; height: 350px; background: #8B0000;
+            bottom: -50px; left: -50px; animation-duration: 15s; animation-delay: -6s;
+        }
+        .rcw-orb-3 {
+            width: 280px; height: 280px; background: #660000;
+            top: 40%; left: 30%; animation-duration: 10s; animation-delay: -3s;
+        }
+        @keyframes rcw-float {
+            0% { transform: translate(0, 0) scale(0.9); }
+            100% { transform: translate(60px, 40px) scale(1.15); }
+        }
+
+        /* Toast Notification */
+        .rcw-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1a1a1a;
+            border: 1px solid var(--rcw-border);
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: transform 0.4s var(--rcw-ease), opacity 0.4s var(--rcw-ease);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .rcw-toast.rcw-show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .rcw-toast.rcw-success { border-color: #2ecc71; }
+
+        /* ==========================================================================
+           3. NAVBAR & MENU OVERLAY
+           ========================================================================== */
+        .rcw-navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--rcw-nav-height);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 clamp(16px, 4vw, 60px);
+            transition: all 0.4s var(--rcw-ease);
+            border-bottom: 1px solid transparent;
+        }
+        .rcw-navbar.rcw-scrolled {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom-color: var(--rcw-border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+        .rcw-nav-left, .rcw-nav-right { flex: 1; display: flex; align-items: center; }
+        .rcw-nav-right { justify-content: flex-end; }
+        .rcw-nav-center { flex: 2; display: flex; justify-content: center; }
+
+        /* Hamburger */
+        .rcw-hamburger {
+            width: 36px; height: 36px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+            z-index: 1001; position: relative;
+        }
+        .rcw-hamburger span {
+            display: block; width: 26px; height: 2px;
+            background: #FFF; transition: all 0.25s var(--rcw-ease);
+        }
+        .rcw-hamburger.rcw-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .rcw-hamburger.rcw-active span:nth-child(2) { transform: scaleX(0); opacity: 0; }
+        .rcw-hamburger.rcw-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* Search */
+        .rcw-nav-search {
+            position: relative; width: 100%; max-width: 420px;
+        }
+        .rcw-nav-search input {
+            width: 100%; padding: 10px 20px 10px 40px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--rcw-border);
+            border-radius: 50px;
+            color: #FFF; font-family: var(--rcw-font-body);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .rcw-nav-search input:focus {
+            border-color: var(--rcw-accent-red);
+            box-shadow: 0 0 15px var(--rcw-accent-glow);
+            background: rgba(255,255,255,0.1);
+        }
+        .rcw-nav-search svg {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; fill: var(--rcw-text-mut); pointer-events: none;
+        }
+
+        /* Menu Overlay */
+        .rcw-menu-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            z-index: 999;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s var(--rcw-ease);
+        }
+        .rcw-menu-overlay.rcw-active { opacity: 1; pointer-events: auto; }
+        .rcw-menu-list { text-align: center; }
+        .rcw-menu-item { overflow: hidden; margin-bottom: 20px; }
+        .rcw-menu-link {
+            font-family: var(--rcw-font-head);
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            letter-spacing: 2px;
+            display: inline-block;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.5s var(--rcw-ease), opacity 0.5s var(--rcw-ease), color 0.3s;
+            position: relative;
+        }
+        .rcw-menu-overlay.rcw-active .rcw-menu-link { transform: translateY(0); opacity: 1; }
+        .rcw-menu-link::after {
+            content: ''; position: absolute; left: 0; bottom: 0;
+            width: 0%; height: 3px; background: var(--rcw-accent-red);
+            transition: width 0.3s ease;
+        }
+        .rcw-menu-link:hover::after { width: 100%; }
+
+        /* ==========================================================================
+           4. HERO SECTION
+           ========================================================================== */
+        .rcw-hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 100px 20px 60px;
+            z-index: 1; text-align: center;
+        }
+        .rcw-hero-bg {
+            position: absolute; inset: 0; z-index: -1;
+        }
+        .rcw-hero-slide {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 2s ease-in-out;
+        }
+        .rcw-hero-slide::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.95) 70%, #000 100%);
+        }
+        .rcw-hero-content { max-width: 800px; display: flex; flex-direction: column; align-items: center; }
+        
+        .rcw-hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 50px;
+            border: 1px solid var(--rcw-border-hover);
+            background: rgba(229, 9, 20, 0.1);
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 24px; color: #FFF;
+        }
+        .rcw-hero-h1 {
+            font-family: var(--rcw-font-head);
+            font-size: clamp(3rem, 8vw, 6rem);
+            letter-spacing: 3px; line-height: 1.1; margin-bottom: 20px;
+        }
+        .rcw-hero-h1 span { color: var(--rcw-accent-red); }
+        .rcw-hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            color: var(--rcw-text-sec); font-weight: 500; margin-bottom: 24px;
+        }
+        .rcw-hero-desc {
+            color: var(--rcw-text-mut); max-width: 650px; margin: 0 auto 40px;
+            line-height: 1.7; font-size: 0.95rem;
+        }
+        .rcw-hero-desc p { margin-bottom: 12px; }
+        .rcw-hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        
+        /* Staggered entrance */
+        .rcw-hero-content > * { opacity: 0; transform: translateY(30px); animation: rcw-hero-in 0.8s var(--rcw-ease) forwards; }
+        .rcw-hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+        .rcw-hero-content > *:nth-child(2) { animation-delay: 0.25s; }
+        .rcw-hero-content > *:nth-child(3) { animation-delay: 0.4s; }
+        .rcw-hero-content > *:nth-child(4) { animation-delay: 0.55s; }
+        .rcw-hero-content > *:nth-child(5) { animation-delay: 0.7s; }
+        @keyframes rcw-hero-in { to { opacity: 1; transform: translateY(0); } }
+
+        /* ==========================================================================
+           5. TEMPLATES SECTION
+           ========================================================================== */
+        .rcw-templates { padding: var(--rcw-section-pad); position: relative; z-index: 2; }
+        
+        .rcw-template-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        /* Template Card */
+        .rcw-card {
+            background: var(--rcw-bg-card);
+            border-radius: var(--rcw-radius-lg);
+            border: 1px solid var(--rcw-border);
+            overflow: hidden;
+            transition: all 0.4s var(--rcw-ease);
+            display: flex; flex-direction: column;
+        }
+        .rcw-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--rcw-border-hover);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 40px rgba(229, 9, 20, 0.12);
+        }
+        
+        .rcw-card-carousel {
+            position: relative; aspect-ratio: 16/10;
+            background: #1a1a1a; overflow: hidden;
+        }
+        .rcw-card-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0; transition: opacity 0.5s ease;
+        }
+        .rcw-card-img.rcw-active { opacity: 1; }
+        
+        .rcw-carousel-dots {
+            position: absolute; bottom: 12px; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 6px; z-index: 5;
+        }
+        .rcw-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s;
+        }
+        .rcw-dot.rcw-active { background: #FFF; box-shadow: 0 0 8px #FFF; transform: scale(1.2); }
+        
+        .rcw-card-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; }
+        .rcw-card-title { font-family: var(--rcw-font-head); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 6px; }
+        .rcw-card-desc { font-size: 0.85rem; color: var(--rcw-text-mut); margin-bottom: 14px; line-height: 1.4; flex: 1; }
+        .rcw-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .rcw-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 50px; border: 1px solid #444; color: #ccc; }
+        
+        .rcw-card-actions { display: flex; gap: 8px; }
+        .rcw-card-actions button { flex: 1; padding: 10px; font-size: 0.85rem; }
+
+        /* ==========================================================================
+           6. HOW IT WORKS SECTION
+           ========================================================================== */
+        .rcw-how-it-works { padding: var(--rcw-section-pad); background: linear-gradient(180deg, #000, #0a0a0a, #000); }
+        .rcw-steps-container {
+            display: flex; justify-content: center; align-items: flex-start;
+            flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto;
+        }
+        .rcw-step {
+            flex: 1; min-width: 180px; max-width: 220px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; position: relative;
+        }
+        .rcw-step-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: var(--rcw-bg-card); border: 1px solid var(--rcw-border);
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+            position: relative; margin-bottom: 20px; transition: all 0.3s;
+            z-index: 2;
+        }
+        .rcw-step:hover .rcw-step-icon { border-color: var(--rcw-accent-red); box-shadow: 0 0 20px var(--rcw-accent-glow); }
+        .rcw-step-num {
+            position: absolute; top: -5px; right: -5px; width: 24px; height: 24px;
+            background: var(--rcw-accent-red); color: #FFF; border-radius: 50%;
+            font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; justify-content: center;
+        }
+        .rcw-step-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 8px; }
+        .rcw-step-connector {
+            position: absolute; top: 32px; left: calc(50% + 40px); right: calc(-50% + 40px);
+            height: 1px; background: var(--rcw-border); z-index: 1;
+        }
+        .rcw-step:last-child .rcw-step-connector { display: none; }
+
+                7. PAYMENT POLICY & INDUSTRIES
+           ========================================================================== */
+        .rcw-policy { padding: var(--rcw-section-pad); text-align: center; max-width: 800px; margin: 0 auto; }
+        .rcw-policy-box {
+            background: var(--rcw-bg-card); padding: 40px; border-radius: var(--rcw-radius-xl);
+            border: 1px solid var(--rcw-border);
+        }
+        .rcw-policy-text { font-size: 1.05rem; color: var(--rcw-text-sec); margin-bottom: 30px; }
+        .rcw-trust-notes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        .rcw-trust-pill {
+            padding: 8px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--rcw-border);
+            border-radius: 50px; font-size: 0.85rem; color: #FFF;
+        }
+
+        .rcw-industries { padding: 40px 0 80px; overflow: hidden; }
+        .rcw-industries-row {
+            display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 12px;
+            padding: 20px clamp(16px, 4vw, 60px); cursor: grab;
+        }
+        .rcw-industries-row::-webkit-scrollbar { display: none; }
+        .rcw-industries-row { -ms-overflow-style: none; scrollbar-width: none; }
+        .rcw-industry-chip {
+            padding: 12px 24px; background: var(--rcw-bg-card); border: 1px solid var(--rcw-border);
+            border-radius: 50px; white-space: nowrap; font-weight: 500; font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .rcw-industry-chip:hover, .rcw-industry-chip.rcw-active {
+            background: var(--rcw-accent-red); border-color: var(--rcw-accent-red);
+            box-shadow: 0 4px 15px var(--rcw-accent-glow);
+        }
+
+        /* ==========================================================================
+           8. TRUST SECTION
+           ========================================================================== */
+        .rcw-trust { padding: var(--rcw-section-pad); }
+        .rcw-trust-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto;
+        }
+        .rcw-trust-card {
+            background: var(--rcw-bg-card); padding: 40px 20px; border-radius: var(--rcw-radius-lg);
+            text-align: center; border: 1px solid var(--rcw-border); transition: transform 0.3s;
+        }
+        .rcw-trust-card:hover { transform: translateY(-4px); border-color: var(--rcw-border-hover); }
+        .rcw-counter {
+            font-family: var(--rcw-font-head); font-size: 3.5rem; color: var(--rcw-accent-red);
+            line-height: 1; margin-bottom: 10px;
+        }
+        .rcw-trust-label { font-weight: 600; color: var(--rcw-text-pri); }
+
+        /* ==========================================================================
+           9. FINAL CTA & FOOTER
+           ========================================================================== */
+        .rcw-final-cta-wrap { padding: clamp(20px, 4vw, 80px); }
+        .rcw-final-cta {
+            position: relative; padding: 80px 20px; border-radius: var(--rcw-radius-xl);
+            text-align: center; overflow: hidden; max-width: 1200px; margin: 0 auto;
+        }
+        .rcw-final-cta::before {
+            content: ''; position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop') center/cover;
+            opacity: 0.3; z-index: 0;
+        }
+        .rcw-final-cta::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.6), rgba(0,0,0,0.9)); z-index: 1;
+        }
+        .rcw-final-content { position: relative; z-index: 2; }
+        
+        .rcw-footer { padding: 60px clamp(16px, 4vw, 60px) 30px; border-top: 1px solid var(--rcw-border); }
+        .rcw-footer-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-bottom: 40px; }
+        .rcw-footer-brand { font-family: var(--rcw-font-head); font-size: 2.5rem; letter-spacing: 2px; }
+        .rcw-footer-brand span { color: var(--rcw-accent-red); }
+        .rcw-footer-links { display: flex; gap: 40px; flex-wrap: wrap; }
+        .rcw-footer-col h4 { margin-bottom: 16px; font-size: 1rem; color: #FFF; }
+        .rcw-footer-col ul li { margin-bottom: 10px; }
+        .rcw-footer-col a { color: var(--rcw-text-sec); font-size: 0.9rem; transition: color 0.3s; }
+        .rcw-footer-col a:hover { color: var(--rcw-accent-red); }
+        .rcw-footer-bottom { text-align: center; color: var(--rcw-text-mut); font-size: 0.85rem; padding-top: 20px; border-top: 1px solid var(--rcw-border); }
+
+        /* ==========================================================================
+           10. MODALS (Preview & Form)
+           ========================================================================== */
+        .rcw-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.4s var(--rcw-ease); padding: 20px;
+        }
+        .rcw-modal-overlay.rcw-active { display: flex; opacity: 1; }
+        
+        .rcw-modal-box {
+            background: #1a1a1a; border-radius: var(--rcw-radius-xl); border: 1px solid var(--rcw-border);
+            max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto;
+            transform: translateY(20px); transition: transform 0.4s var(--rcw-ease);
+            position: relative;
+        }
+        .rcw-modal-overlay.rcw-active .rcw-modal-box { transform: translateY(0); }
+        
+        .rcw-modal-close {
+            position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #FFF; font-size: 1.5rem; transition: all 0.3s; z-index: 10;
+        }
+        .rcw-modal-close:hover { background: var(--rcw-accent-red); transform: rotate(90deg); }
+
+        /* Preview Modal Specifics */
+        .rcw-preview-content { padding: 40px; }
+        .rcw-preview-header { margin-bottom: 30px; padding-right: 40px; }
+        .rcw-preview-title { font-family: var(--rcw-font-head); font-size: 2.5rem; letter-spacing: 1px; color: #FFF; }
+        .rcw-preview-desc { color: var(--rcw-text-sec); margin-top: 10px; }
+
+        /* Preview Image Grid */
+        .rcw-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .rcw-preview-grid-item {
+            position: relative;
+            border-radius: var(--rcw-radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #333;
+            transition: transform 0.3s var(--rcw-ease), border-color 0.3s;
+            aspect-ratio: 16/10;
+        }
+        .rcw-preview-grid-item:hover {
+            transform: scale(1.03);
+            border-color: var(--rcw-accent-red);
+        }
+        .rcw-preview-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+          /* Zoom Overlay */
+        .rcw-zoom-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 40px;
+        }
+        .rcw-zoom-overlay.rcw-active { display: flex; }
+        .rcw-zoom-overlay img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: var(--rcw-radius-md);
+            border: 1px solid #333;
+        }
+        .rcw-zoom-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: #FFF;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 3001;
+        }
+        .rcw-zoom-close:hover { background: var(--rcw-accent-red); }
+
+        .rcw-preview-description {
+            color: var(--rcw-text-sec);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--rcw-radius-md);
+            border: 1px solid var(--rcw-border);
+        }
+
+        .rcw-preview-contact {
+            color: var(--rcw-text-mut);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: rgba(229,9,20,0.05);
+            border-radius: var(--rcw-radius-md);
+            border: 1px solid rgba(229,9,20,0.2);
+            line-height: 1.8;
+        }
+        .rcw-preview-contact strong { color: #FFF; }
+        .rcw-preview-contact a { color: var(--rcw-accent-red); text-decoration: underline; }
+
+        .rcw-preview-actions { 
+            display: flex; 
+            gap: 16px; 
+            justify-content: center; 
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .rcw-preview-actions .payhip-buy-button {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            border-radius: 50px !important;
+            transition: all 0.3s var(--rcw-ease) !important;
+            white-space: nowrap;
+            background: transparent !important;
+            color: #FFF !important;
+            border: 1px solid var(--rcw-border) !important;
+            text-decoration: none !important;
+            cursor: pointer;
+            font-family: var(--rcw-font-body) !important;
+        }
+        .rcw-preview-actions .payhip-buy-button:hover {
+            transform: translateY(-2px) !important;
+            border-color: #FFF !important;
+            background: rgba(255,255,255,0.05) !important;
+        }
+
+        /* Form Modal Specifics */
+        .rcw-form-overlay { z-index: 2001; }
+        .rcw-form-box { max-width: 520px; padding: 40px; }
+        .rcw-form-title { font-family: var(--rcw-font-head); font-size: 2rem; text-align: center; margin-bottom: 24px; }
+        .rcw-form-group { margin-bottom: 20px; }
+        .rcw-form-group label { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--rcw-text-sec); margin-bottom: 8px; }
+        .rcw-form-group input, .rcw-form-group select, .rcw-form-group textarea {
+            width: 100%; padding: 14px; background: rgba(0,0,0,0.5); border: 1px solid var(--rcw-border);
+            border-radius: var(--rcw-radius-sm); color: #FFF; font-family: var(--rcw-font-body);
+            transition: all 0.3s; outline: none;
+        }
+        .rcw-form-group input:focus, .rcw-form-group select:focus, .rcw-form-group textarea:focus {
+            border-color: var(--rcw-accent-red); box-shadow: 0 0 10px var(--rcw-accent-glow);
+        }
+        .rcw-form-group select option { background: #1a1a1a; color: #FFF; }
+        .rcw-submit-btn { width: 100%; padding: 16px; font-size: 1.1rem; margin-top: 10px; }
+
+        /* ==========================================================================
+           11. RESPONSIVE MEDIA QUERIES
+           ========================================================================== */
+        @media (max-width: 1200px) {
+            .rcw-template-grid { grid-template-columns: repeat(3, 1fr); }
+            .rcw-trust-grid { grid-template-columns: repeat(2, 1fr); }
+            .rcw-preview-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .rcw-template-grid { grid-template-columns: repeat(2, 1fr); }
+            .rcw-step-connector { display: none; }
+            .rcw-step { min-width: 45%; }
+            .rcw-preview-content { padding: 25px 20px; }
+        }
+        @media (max-width: 768px) {
+            .rcw-nav-search { display: none; }
+            .rcw-nav-right .rcw-btn { padding: 8px 16px; font-size: 0.9rem; }
+            .rcw-hero-h1 { font-size: clamp(2.5rem, 10vw, 4rem); }
+            .rcw-hero-actions { flex-direction: column; width: 100%; padding: 0 20px; }
+            .rcw-hero-actions .rcw-btn { width: 100%; }
+            .rcw-footer-top { flex-direction: column; text-align: center; }
+            .rcw-footer-links { justify-content: center; }
+            .rcw-form-box, .rcw-preview-content { padding: 25px 20px; }
+            .rcw-preview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+        }
+        @media (max-width: 560px) {
+            .rcw-template-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+            .rcw-trust-grid { grid-template-columns: 1fr; }
+            .rcw-step { min-width: 100%; }
+            .rcw-preview-actions { flex-direction: column; }
+            .rcw-preview-actions .rcw-btn, .rcw-preview-actions .payhip-buy-button { width: 100%; text-align: center; }
+            .rcw-preview-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SKELETON LOADER -->
+    <div class="rcw-loader" id="rcwLoader">
+        <div class="rcw-loader-text">RC<span>W</span></div>
+    </div>
+
+    <!-- FLOATING ORBS -->
+    <div class="rcw-orbs-container">
+        <div class="rcw-orb rcw-orb-1"></div>
+        <div class="rcw-orb rcw-orb-2"></div>
+        <div class="rcw-orb rcw-orb-3"></div>
+    </div>
+
+    <!-- IMAGE ZOOM OVERLAY -->
+    <div class="rcw-zoom-overlay" id="rcwZoomOverlay" onclick="rcwApp.closeZoom()">
+        <button class="rcw-zoom-close" onclick="rcwApp.closeZoom()">&times;</button>
+        <img src="" alt="Zoomed preview" id="rcwZoomImage">
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="rcw-navbar" id="rcwNavbar">
+        <div class="rcw-nav-left">
+            <button class="rcw-hamburger" id="rcwMenuBtn" aria-label="Toggle Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="rcw-nav-center">
+            <div class="rcw-nav-search">
+                <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <input type="text" id="rcwSearchInput" placeholder="Search templates, business types...">
+            </div>
+        </div>
+        <div class="rcw-nav-right">
+            <button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal()">Book a Call</button>
+        </div>
+    </nav>
+
+    <!-- FULLSCREEN MENU -->
+    <div class="rcw-menu-overlay" id="rcwMenuOverlay">
+        <div class="rcw-menu-list">
+            <div class="rcw-menu-item"><a href="#home" class="rcw-menu-link" style="transition-delay: 0.05s">Home</a></div>
+            <div class="rcw-menu-item"><a href="#templates" class="rcw-menu-link" style="transition-delay: 0.10s">Templates</a></div>
+            <div class="rcw-menu-item"><a href="#industries" class="rcw-menu-link" style="transition-delay: 0.15s">Industries</a></div>
+            <div class="rcw-menu-item"><a href="#how-it-works" class="rcw-menu-link" style="transition-delay: 0.20s">How It Works</a></div>
+            <div class="rcw-menu-item"><a href="#pricing" class="rcw-menu-link" style="transition-delay: 0.25s">Pricing</a></div>
+            <div class="rcw-menu-item"><button class="rcw-menu-link" style="transition-delay: 0.30s; border:none; background:none; cursor:pointer;" onclick="rcwApp.openFormModal()">Book a Call</button></div>
+        </div>
+    </div>
+
+      <!-- HERO SECTION -->
+    <section class="rcw-hero" id="home">
+        <div class="rcw-hero-bg" id="rcwHeroBg">
+            <!-- Background slides added via JS -->
+        </div>
+        <div class="rcw-hero-content rcw-container">
+            <div class="rcw-hero-badge">🚀 Fast Website Launch Service</div>
+            <h1 class="rcw-hero-h1">Ready Crafted <span>Websites</span></h1>
+            <p class="rcw-hero-subtitle">Launch Your Business Website in 2–3 Days — Not Months.</p>
+            <div class="rcw-hero-desc">
+                <p>Ready Crafted Websites creates premium pre-built websites tailored for modern businesses. We design and sell professionally crafted website templates that are ready for fast launch. Simply choose a template that matches your brand, and we'll work closely with you to customize your details, content, images, and branding until your website is fully polished.</p>
+                <p>Why wait months? Go live in just 2–3 days through our efficient process. We remain available for future updates at a friendly fee, building long-term relationships.</p>
+            </div>
+            <div class="rcw-hero-actions">
+                <a href="#templates" class="rcw-btn rcw-btn-primary">Explore Templates</a>
+                <button class="rcw-btn rcw-btn-ghost" onclick="rcwApp.openFormModal()">Book a Call</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEMPLATES SECTION -->
+    <section class="rcw-templates" id="templates">
+        <div class="rcw-container">
+            <h2 class="rcw-section-title rcw-fade-up">Explore • Select • Submit • Done ✅</h2>
+            <p class="rcw-section-subtitle rcw-fade-up">Fast & Easy Website Launch Process</p>
+            
+            <div class="rcw-template-grid" id="rcwTemplateGrid">
+                <!-- Cards dynamically injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="rcw-how-it-works" id="how-it-works">
+        <div class="rcw-container">
+            <h2 class="rcw-section-title rcw-fade-up">How It Works</h2>
+            <p class="rcw-section-subtitle rcw-fade-up">From selection to launch in 5 simple steps</p>
+            
+            <div class="rcw-steps-container rcw-fade-up">
+                <div class="rcw-step">
+                    <div class="rcw-step-icon">📋<div class="rcw-step-num">1</div></div>
+                    <div class="rcw-step-connector"></div>
+                    <h3 class="rcw-step-title">Choose Template</h3>
+                    <p class="rcw-card-desc">Find the perfect design for your brand.</p>
+                </div>
+                <div class="rcw-step">
+                    <div class="rcw-step-icon">📝<div class="rcw-step-num">2</div></div>
+                    <div class="rcw-step-connector"></div>
+                    <h3 class="rcw-step-title">Submit Details</h3>
+                    <p class="rcw-card-desc">Send us your info and requirements.</p>
+                </div>
+                <div class="rcw-step">
+                    <div class="rcw-step-icon">💳<div class="rcw-step-num">3</div></div>
+                    <div class="rcw-step-connector"></div>
+                    <h3 class="rcw-step-title">Pay Deposit</h3>
+                    <p class="rcw-card-desc">Secure project with 50% upfront.</p>
+                </div>
+                <div class="rcw-step">
+                    <div class="rcw-step-icon">🎨<div class="rcw-step-num">4</div></div>
+                    <div class="rcw-step-connector"></div>
+                    <h3 class="rcw-step-title">We Customize</h3>
+                    <p class="rcw-card-desc">We tailor colors, text, and images.</p>
+                </div>
+                <div class="rcw-step">
+                    <div class="rcw-step-icon">🚀<div class="rcw-step-num">5</div></div>
+                    <h3 class="rcw-step-title">Website Lives</h3>
+                    <p class="rcw-card-desc">Final payment and fast launch.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAYMENT POLICY -->
+    <section class="rcw-policy" id="pricing">
+        <div class="rcw-container rcw-fade-up">
+            <h2 class="rcw-section-title">Payment & Policy</h2>
+            <div class="rcw-policy-box">
+                <p class="rcw-policy-text">To begin your project, a <strong>50% upfront deposit</strong> is required before any customization work starts. The remaining balance is paid after the website is completed and approved before final publishing or transfer.</p>
+                <div class="rcw-trust-notes">
+                    <span class="rcw-trust-pill">⚡ Fast communication</span>
+                    <span class="rcw-trust-pill">💰 Affordable modifications</span>
+                    <span class="rcw-trust-pill">🤝 Friendly support</span>
+                    <span class="rcw-trust-pill">✅ Professional workflow</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INDUSTRIES -->
+    <section class="rcw-industries" id="industries">
+        <h2 class="rcw-section-title rcw-fade-up" style="font-size: 2.5rem;">Industries We Serve</h2>
+        <p class="rcw-section-subtitle rcw-fade-up" style="margin-bottom: 20px;">Scroll to explore →</p>
+        
+        <div class="rcw-industries-row rcw-fade-up" id="rcwIndustriesRow">
+            <button class="rcw-industry-chip rcw-active" data-filter="All">All Templates</button>
+            <button class="rcw-industry-chip" data-filter="Beauty & Salon">Beauty & Salon</button>
+            <button class="rcw-industry-chip" data-filter="Restaurant">Restaurants</button>
+            <button class="rcw-industry-chip" data-filter="E-commerce">E-commerce</button>
+            <button class="rcw-industry-chip" data-filter="Agency">Agencies</button>
+            <button class="rcw-industry-chip" data-filter="Real Estate">Real Estate</button>
+            <button class="rcw-industry-chip" data-filter="Fitness">Fitness</button>
+            <button class="rcw-industry-chip" data-filter="Photography">Photography</button>
+            <button class="rcw-industry-chip" data-filter="Corporate">Corporate</button>
+        </div>
+    </section>
+
+    <!-- TRUST SECTION -->
+    <section class="rcw-trust rcw-fade-up">
+        <div class="rcw-container">
+            <h2 class="rcw-section-title" style="margin-bottom: 40px;">Why Choose RCW</h2>
+            <div class="rcw-trust-grid" id="rcwTrustGrid">
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="3" data-suffix=" Days">0</div><div class="rcw-trust-label">Fast Delivery</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="100" data-suffix="%">0</div><div class="rcw-trust-label">Mobile Optimized</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="50" data-suffix="+">0</div><div class="rcw-trust-label">Premium Designs</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="24" data-suffix="/7">0</div><div class="rcw-trust-label">Fast Support</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="99" data-suffix="%">0</div><div class="rcw-trust-label">SEO Friendly</div></div>
+                <div class="rcw-trust-card"><div class="rcw-counter" data-target="0" data-suffix="💰" data-icon="true">0</div><div class="rcw-trust-label">Affordable Maintenance</div></div>
+            </div>
+        </div>
+    </section>
+
+      <!-- FINAL CTA -->
+    <div class="rcw-final-cta-wrap rcw-fade-up">
+        <section class="rcw-final-cta">
+            <div class="rcw-final-content">
+                <h2 class="rcw-section-title">Ready To Launch Faster?</h2>
+                <p class="rcw-section-subtitle" style="color: #ddd;">Stop waiting months for a digital presence.</p>
+                <div class="rcw-hero-actions">
+                    <a href="#templates" class="rcw-btn rcw-btn-primary">Explore Templates</a>
+                    <button class="rcw-btn rcw-btn-ghost" onclick="rcwApp.openFormModal()">Book a Call</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="rcw-footer">
+        <div class="rcw-container">
+            <div class="rcw-footer-top">
+                <div class="rcw-footer-col" style="max-width: 300px;">
+                    <div class="rcw-footer-brand">RC<span>W</span></div>
+                    <p class="rcw-card-desc" style="margin-top: 15px;">Premium pre-built websites tailored for modern businesses. Launch in days, not months.</p>
+                </div>
+                <div class="rcw-footer-links">
+                    <div class="rcw-footer-col">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#templates">Templates</a></li>
+                            <li><a href="#how-it-works">How It Works</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                        </ul>
+                    </div>
+                    <div class="rcw-footer-col">
+                        <h4>Contact & Social</h4>
+                        <ul>
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">WhatsApp</a></li>
+                            <li><a href="#">Email Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="rcw-footer-col">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#pricing">Payment Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="rcw-footer-bottom">
+                &copy; <span id="rcwYear"></span> Ready Crafted Websites. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- PREVIEW MODAL -->
+    <div class="rcw-modal-overlay" id="rcwPreviewModal">
+        <div class="rcw-modal-box">
+            <button class="rcw-modal-close" onclick="rcwApp.closePreviewModal()">×</button>
+            <div class="rcw-preview-content" id="rcwPreviewContent">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM MODAL -->
+    <div class="rcw-form-overlay rcw-modal-overlay" id="rcwFormModal">
+        <div class="rcw-modal-box rcw-form-box">
+            <button class="rcw-modal-close" onclick="rcwApp.closeFormModal()">×</button>
+            <h2 class="rcw-form-title">Submit Interest</h2>
+            <form id="rcwInterestForm" onsubmit="rcwApp.handleFormSubmit(event)">
+                <div class="rcw-form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="rcwFormName" required placeholder="John Doe">
+                </div>
+                <div class="rcw-form-group">
+                    <label>Business Name *</label>
+                    <input type="text" id="rcwFormBiz" required placeholder="Your Brand LLC">
+                </div>
+                <div class="rcw-form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="rcwFormEmail" required placeholder="john@example.com">
+                </div>
+                <div class="rcw-form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="tel" id="rcwFormPhone" placeholder="+1 234 567 8900">
+                </div>
+                <div class="rcw-form-group">
+                    <label>Selected Template</label>
+                    <select id="rcwFormTemplate">
+                        <option value="Not specified">Not specified / Need Help Choosing</option>
+                        <!-- Options injected via JS -->
+                    </select>
+                </div>
+                <div class="rcw-form-group">
+                    <label>Additional Requests</label>
+                    <textarea id="rcwFormNotes" rows="3" placeholder="Tell us a bit about your business..."></textarea>
+                </div>
+                <button type="submit" class="rcw-btn rcw-btn-primary rcw-submit-btn">🚀 Start My Website</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="rcw-toast" id="rcwToast">
+        <span>✅</span> <span id="rcwToastMsg">Request submitted successfully!</span>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const rcwApp = (function() {
+            /* --- 1. DATA: TEMPLATES --- */
+            const templatesData = [
+                {
+                    id: 1,
+                    title: 'Netflix Style Website',
+                    desc: 'Cinematic, modern templates for creators, brands, and digital portfolios.',
+                    industry: 'Beauty & Salon',
+                    tags: ['Gallery Showcase', 'Dark Mode Experience', 'Booking Integration System'],
+                    images: [
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293228301_zq9eqn.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293345213_i7526h.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293574071_rjy04m.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779294292/1779293880592_l49wah.jpg'
+                    ],
+                    previewImages: [
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292541/Screenshot_20260520_153354_2_ttlfwk.jpg',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292547/file_000000005d3471fb9dc2978fba08bb5e_rubj6n.png',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292549/file_00000000aca071fb99708b707a1b91fb_kinopb.png',
+                        'https://res.cloudinary.com/datfuxotx/image/upload/v1779292553/file_00000000111c724395d86bac427a30e3_sfiqdq.png'
+                    ],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 2,
+                    title: 'Bite Restaurant',
+                    desc: 'Appetizing layout designed to showcase menus and drive reservations.',
+                    industry: 'Restaurant',
+                    tags: ['Menu System', 'Reservations', 'Visual Heavy'],
+                    images: [
+                        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80',
+                        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+                        'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=800&q=80',
+                        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 3,
+                    title: 'Vogue Fashion',
+                    desc: 'Sleek, minimalist aesthetic for clothing brands and boutiques.',
+                    industry: 'E-commerce',
+                    tags: ['Shop Ready', 'Minimal', 'Lookbook'],
+                    images: [
+                        'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&q=80',
+                        'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80',
+                        'https://images.unsplash.com/photo-1489987707023-af279061943e?w=800&q=80',
+                        'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 4,
+                    title: 'Nexus Agency',
+                    desc: 'Professional, tech-forward design for marketing & digital agencies.',
+                    industry: 'Agency',
+                    tags: ['Portfolio', 'Services', 'Lead Gen'],
+                    images: [
+                        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+                        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+                        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
+                        'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 5,
+                    title: 'Estate Prime',
+                    desc: 'Luxury property listings with advanced search for realtors.',
+                    industry: 'Real Estate',
+                    tags: ['Property Listings', 'Maps', 'Agent Profile'],
+                    images: [
+                        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
+                        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+                        'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80',
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 6,
+                    title: 'Iron Fitness',
+                    desc: 'High-energy layout for gyms, personal trainers, and fitness coaches.',
+                    industry: 'Fitness',
+                    tags: ['Class Schedules', 'Bold UI', 'Video Headers'],
+                    images: [
+                        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
+                        'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&q=80',
+                        'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=800&q=80',
+                        'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 7,
+                    title: 'Lens Pro',
+                    desc: 'Immersive portfolio layout designed specifically for photographers.',
+                    industry: 'Photography',
+                    tags: ['Masonry Grid', 'Client Proofing', 'Minimal'],
+                    images: [
+                        'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&q=80',
+                        'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80',
+                        'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
+                        'https://images.unsplash.com/photo-1554048665-8b43bd22d2ee?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                },
+                {
+                    id: 8,
+                    title: 'Corporate Elite',
+                    desc: 'Trust-building, structured layout for law firms and consultants.',
+                    industry: 'Corporate',
+                    tags: ['Trust Factors', 'Team Profiles', 'Clean'],
+                    images: [
+                        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
+                        'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=800&q=80',
+                        'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80',
+                        'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80'
+                    ],
+                    previewImages: [],
+                    payhipUrl: 'https://payhip.com/b/BT7P5'
+                }
+            ];
+
+            let carouselIntervals = {};
+
+            /* --- 2. DOM ELEMENTS --- */
+            const DOM = {
+                body: document.body,
+                loader: document.getElementById('rcwLoader'),
+                navbar: document.getElementById('rcwNavbar'),
+                menuBtn: document.getElementById('rcwMenuBtn'),
+                menuOverlay: document.getElementById('rcwMenuOverlay'),
+                menuLinks: document.querySelectorAll('.rcw-menu-link'),
+                heroBg: document.getElementById('rcwHeroBg'),
+                templateGrid: document.getElementById('rcwTemplateGrid'),
+                searchInput: document.getElementById('rcwSearchInput'),
+                industryChips: document.querySelectorAll('.rcw-industry-chip'),
+                previewModal: document.getElementById('rcwPreviewModal'),
+                previewContent: document.getElementById('rcwPreviewContent'),
+                formModal: document.getElementById('rcwFormModal'),
+                formTemplateSelect: document.getElementById('rcwFormTemplate'),
+                interestForm: document.getElementById('rcwInterestForm'),
+                toast: document.getElementById('rcwToast'),
+                fadeElements: document.querySelectorAll('.rcw-fade-up'),
+                counters: document.querySelectorAll('.rcw-counter'),
+                year: document.getElementById('rcwYear'),
+                zoomOverlay: document.getElementById('rcwZoomOverlay'),
+                zoomImage: document.getElementById('rcwZoomImage')
+            };
+
+                      /* --- 3. INITIALIZATION --- */
+            function init() {
+                DOM.year.textContent = new Date().getFullYear();
+
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        DOM.loader.style.opacity = '0';
+                        setTimeout(() => DOM.loader.remove(), 500);
+                    }, 800);
+                });
+
+                initHeroBg();
+                renderTemplates(templatesData);
+                populateFormSelect();
+                setupEventListeners();
+                initObservers();
+            }
+
+            /* --- 4. HERO BACKGROUND CROSSFADE --- */
+            function initHeroBg() {
+                const heroImages = [
+                    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80',
+                    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+                    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600&q=80'
+                ];
+                heroImages.forEach((img, i) => {
+                    const slide = document.createElement('div');
+                    slide.className = `rcw-hero-slide ${i === 0 ? 'rcw-active' : ''}`;
+                    slide.style.backgroundImage = `url(${img})`;
+                    if(i===0) slide.style.opacity = '1';
+                    DOM.heroBg.appendChild(slide);
+                });
+
+                let currSlide = 0;
+                const slides = DOM.heroBg.querySelectorAll('.rcw-hero-slide');
+                
+                setInterval(() => {
+                    slides[currSlide].style.opacity = '0';
+                    currSlide = (currSlide + 1) % slides.length;
+                    slides[currSlide].style.opacity = '1';
+                }, 6000);
+            }
+
+            /* --- 5. TEMPLATES GENERATION & CAROUSEL --- */
+            function renderTemplates(data) {
+                Object.values(carouselIntervals).forEach(clearInterval);
+                carouselIntervals = {};
+                
+                DOM.templateGrid.innerHTML = '';
+                
+                if(data.length === 0) {
+                    DOM.templateGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color: #999;">No templates found matching your criteria.</p>`;
+                    return;
+                }
+
+                data.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 'rcw-card rcw-fade-up rcw-visible';
+                    
+                    let imagesHtml = '';
+                    let dotsHtml = '';
+                    t.images.forEach((img, i) => {
+                        imagesHtml += `<img src="${img}" class="rcw-card-img ${i===0?'rcw-active':''}" loading="lazy" alt="${t.title} preview">`;
+                        dotsHtml += `<div class="rcw-dot ${i===0?'rcw-active':''}" data-index="${i}"></div>`;
+                    });
+
+                    let tagsHtml = t.tags.map(tag => `<span class="rcw-tag">${tag}</span>`).join('');
+
+                    card.innerHTML = `
+                        <div class="rcw-card-carousel" id="carousel-${t.id}">
+                            ${imagesHtml}
+                            <div class="rcw-carousel-dots">${dotsHtml}</div>
+                        </div>
+                        <div class="rcw-card-body">
+                            <h3 class="rcw-card-title">${t.title}</h3>
+                            <p class="rcw-card-desc">${t.desc}</p>
+                            <div class="rcw-card-tags">${tagsHtml}</div>
+                            <div class="rcw-card-actions">
+                                <button class="rcw-btn rcw-btn-ghost" onclick="rcwApp.openPreviewModal(${t.id})">Preview</button>
+                                <button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal('${t.title.replace(/'/g, "\\'")}')">Submit</button>
+                            </div>
+                        </div>
+                    `;
+                    DOM.templateGrid.appendChild(card);
+                    initCarousel(t.id, t.images.length);
+                });
+            }
+
+            function initCarousel(id, length) {
+                const carousel = document.getElementById(`carousel-${id}`);
+                if(!carousel) return;
+                const imgs = carousel.querySelectorAll('.rcw-card-img');
+                const dots = carousel.querySelectorAll('.rcw-dot');
+                let currentIndex = 0;
+
+                const goToSlide = (index) => {
+                    imgs[currentIndex].classList.remove('rcw-active');
+                    dots[currentIndex].classList.remove('rcw-active');
+                    currentIndex = index;
+                    imgs[currentIndex].classList.add('rcw-active');
+                    dots[currentIndex].classList.add('rcw-active');
+                };
+
+                const nextSlide = () => goToSlide((currentIndex + 1) % length);
+
+                carouselIntervals[id] = setInterval(nextSlide, 2800);
+
+                dots.forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        clearInterval(carouselIntervals[id]);
+                        goToSlide(parseInt(e.target.dataset.index));
+                        setTimeout(() => {
+                            clearInterval(carouselIntervals[id]);
+                            carouselIntervals[id] = setInterval(nextSlide, 2800);
+                        }, 5000);
+                    });
+                });
+            }
+
+            /* --- 6. IMAGE ZOOM --- */
+            function openZoom(imageSrc) {
+                DOM.zoomImage.src = imageSrc;
+                DOM.zoomOverlay.classList.add('rcw-active');
+                DOM.body.style.overflow = 'hidden';
+            }
+
+            function closeZoom() {
+                DOM.zoomOverlay.classList.remove('rcw-active');
+                if(!DOM.previewModal.classList.contains('rcw-active') && !DOM.formModal.classList.contains('rcw-active')) {
+                    DOM.body.style.overflow = '';
+                }
+            }
+
+            /* --- 7. EVENT LISTENERS --- */
+            function setupEventListeners() {
+                window.addEventListener('scroll', () => {
+                    if(window.scrollY > 40) DOM.navbar.classList.add('rcw-scrolled');
+                    else DOM.navbar.classList.remove('rcw-scrolled');
+                });
+
+                DOM.menuBtn.addEventListener('click', toggleMenu);
+
+                DOM.menuLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        if(link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
+                            toggleMenu();
+                        }
+                    });
+                });
+
+                DOM.searchInput.addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    const filtered = templatesData.filter(t => 
+                        t.title.toLowerCase().includes(val) || 
+                        t.desc.toLowerCase().includes(val) ||
+                        t.tags.some(tag => tag.toLowerCase().includes(val))
+                    );
+                    renderTemplates(filtered);
+                    DOM.industryChips.forEach(c => c.classList.remove('rcw-active'));
+                    DOM.industryChips[0].classList.add('rcw-active');
+                });
+
+                DOM.industryChips.forEach(chip => {
+                    chip.addEventListener('click', (e) => {
+                        DOM.industryChips.forEach(c => c.classList.remove('rcw-active'));
+                        e.target.classList.add('rcw-active');
+                        DOM.searchInput.value = '';
+                        const filter = e.target.dataset.filter;
+                        if(filter === 'All') {
+                            renderTemplates(templatesData);
+                        } else {
+                            renderTemplates(templatesData.filter(t => t.industry === filter));
+                        }
+                        document.getElementById('templates').scrollIntoView({behavior: 'smooth'});
+                    });
+                });
+
+                const indRow = document.getElementById('rcwIndustriesRow');
+                indRow.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    indRow.scrollLeft += e.deltaY;
+                });
+
+                document.querySelectorAll('.rcw-modal-overlay').forEach(overlay => {
+                    overlay.addEventListener('click', (e) => {
+                        if(e.target === overlay) {
+                            closePreviewModal();
+                            closeFormModal();
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if(e.key === 'Escape') {
+                        closeZoom();
+                        closePreviewModal();
+                        closeFormModal();
+                        if(DOM.menuOverlay.classList.contains('rcw-active')) toggleMenu();
+                    }
+                });
+            }
+
+            /* --- 8. MENU & MODAL LOGIC --- */
+            function toggleMenu() {
+                DOM.menuOverlay.classList.toggle('rcw-active');
+                DOM.menuBtn.classList.toggle('rcw-active');
+                DOM.body.classList.toggle('rcw-menu-open');
+            }
+
+            function openPreviewModal(id) {
+                const t = templatesData.find(x => x.id === id);
+                if(!t) return;
+
+                let previewGridHtml = '';
+                if(t.previewImages && t.previewImages.length > 0) {
+                    previewGridHtml = `
+                        <div class="rcw-preview-grid">
+                            ${t.previewImages.map(img => `
+                                <div class="rcw-preview-grid-item" onclick="rcwApp.openZoom('${img}')">
+                                    <img src="${img}" loading="lazy" alt="Preview image">
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                let payhipBtnHtml = t.payhipUrl ? 
+                    `<a href="${t.payhipUrl}" class="payhip-buy-button" data-theme="green" data-product="BT7P5">Buy Now</a>` : '';
+
+                DOM.previewContent.innerHTML = `
+                    <div class="rcw-preview-header">
+                        <h2 class="rcw-preview-title">${t.title}</h2>
+                        <p class="rcw-preview-desc">${t.desc}</p>
+                    </div>
+                    ${previewGridHtml}
+                    <div class="rcw-preview-description">
+                        <p>Premium cinematic website templates built for creators, brands, photographers, videographers, and digital businesses. Designed with smooth Netflix-style browsing, modern visuals, mobile optimization, and immersive media experiences that make your work stand out instantly.</p>
+                    </div>
+                    <div class="rcw-preview-contact">
+                        <p>📱 <strong>WhatsApp:</strong> <a href="https://wa.me/254795299237" target="_blank">+254 7952 99237</a></p>
+                        <p>📧 <strong>Email:</strong> <a href="mailto:renox.usa@gmail.com">renox.usa@gmail.com</a></p>
+                        <p style="margin-top: 8px; font-size: 0.85rem;">We are happy to be part of your journey!</p>
+                    </div>
+                    <div class="rcw-preview-actions">
+                        <button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal('${t.title.replace(/'/g, "\\'")}'); rcwApp.closePreviewModal();">Submit Interest — ${t.title}</button>
+                        ${payhipBtnHtml}
+                    </div>
+                `;
+
+                              DOM.previewModal.classList.add('rcw-active');
+                DOM.body.classList.add('rcw-modal-open');
+            }
+
+            function closePreviewModal() {
+                DOM.previewModal.classList.remove('rcw-active');
+                if(!DOM.formModal.classList.contains('rcw-active')) {
+                    DOM.body.classList.remove('rcw-modal-open');
+                }
+            }
+
+            function populateFormSelect() {
+                templatesData.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.title;
+                    opt.textContent = t.title;
+                    DOM.formTemplateSelect.appendChild(opt);
+                });
+            }
+
+            function openFormModal(templateName = null) {
+                if(templateName) {
+                    DOM.formTemplateSelect.value = templateName;
+                } else {
+                    DOM.formTemplateSelect.value = "Not specified";
+                }
+                if(DOM.menuOverlay.classList.contains('rcw-active')) toggleMenu();
+                DOM.formModal.classList.add('rcw-active');
+                DOM.body.classList.add('rcw-modal-open');
+            }
+
+            function closeFormModal() {
+                DOM.formModal.classList.remove('rcw-active');
+                if(!DOM.previewModal.classList.contains('rcw-active')) {
+                    DOM.body.classList.remove('rcw-modal-open');
+                }
+            }
+
+            function showToast() {
+                DOM.toast.classList.add('rcw-show', 'rcw-success');
+                setTimeout(() => {
+                    DOM.toast.classList.remove('rcw-show');
+                }, 3500);
+            }
+
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('rcwFormName').value,
+                    business: document.getElementById('rcwFormBiz').value,
+                    email: document.getElementById('rcwFormEmail').value,
+                    phone: document.getElementById('rcwFormPhone').value,
+                    template: document.getElementById('rcwFormTemplate').value,
+                    notes: document.getElementById('rcwFormNotes').value
+                };
+
+                console.log("Form Submitted:", formData);
+                
+                showToast();
+                
+                DOM.interestForm.reset();
+                setTimeout(() => { closeFormModal(); }, 1500);
+            }
+
+            /* --- 9. SCROLL OBSERVERS & ANIMATIONS --- */
+            function initObservers() {
+                const fadeObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if(entry.isIntersecting) {
+                            entry.target.classList.add('rcw-visible');
+                            fadeObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+                DOM.fadeElements.forEach(el => fadeObserver.observe(el));
+
+                let countersAnimated = false;
+                const counterObserver = new IntersectionObserver((entries) => {
+                    if(entries[0].isIntersecting && !countersAnimated) {
+                        countersAnimated = true;
+                        animateCounters();
+                    }
+                }, { threshold: 0.5 });
+                
+                if(DOM.counters.length > 0) {
+                    counterObserver.observe(document.getElementById('rcwTrustGrid'));
+                }
+            }
+
+            function animateCounters() {
+                const duration = 1800;
+                
+                DOM.counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    const isIcon = counter.getAttribute('data-icon') === 'true';
+                    
+                    if(isIcon) {
+                        setTimeout(() => { counter.innerText = suffix; }, duration);
+                        return;
+                    }
+
+                    const start = 0;
+                    const startTime = performance.now();
+
+                    function updateCounter(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeOut = 1 - Math.pow(1 - progress, 3);
+                        const currentVal = Math.floor(easeOut * target);
+                        counter.innerText = currentVal + suffix;
+                        if(progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target + suffix;
+                        }
+                    }
+                    requestAnimationFrame(updateCounter);
+                });
+            }
+
+            /* --- PUBLIC API --- */
+            return {
+                init,
+                openFormModal,
+                closeFormModal,
+                openPreviewModal,
+                closePreviewModal,
+                handleFormSubmit,
+                openZoom,
+                closeZoom
+            };
+
+        })();
+
+        document.addEventListener('DOMContentLoaded', rcwApp.init);
+    </script>
+</body>
+</html>
