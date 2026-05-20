@@ -980,6 +980,7 @@
 
 function handleFormSubmit(e) {
     e.preventDefault();
+    
     const formData = {
         full_name: document.getElementById('rcwFormName').value.trim(),
         business_name: document.getElementById('rcwFormBiz').value.trim(),
@@ -988,20 +989,37 @@ function handleFormSubmit(e) {
         selected_template: document.getElementById('rcwFormTemplate').value,
         additional_requests: document.getElementById('rcwFormNotes').value.trim()
     };
-    if(!formData.full_name || !formData.business_name || !formData.email) { alert('Please fill in all required fields.'); return false; }
-    console.log('📧 Sending:', formData);
-    if(typeof emailjs !== 'undefined') {
-        emailjs.send("service_3x6pyyq", "template_hddk7oj", formData)
-            .then(r => { console.log('✅ SUCCESS!', r.status); showToast(); DOM.interestForm.reset(); setTimeout(closeFormModal, 1500); })
-            .catch(err => { console.error('❌ FAILED:', err); alert('Error sending. Check console.'); });
-    } else {
-        console.warn('EmailJS not loaded. Form data:', formData);
-        showToast();
-        DOM.interestForm.reset();
-        setTimeout(closeFormModal, 1500);
+    
+    if (!formData.full_name || !formData.business_name || !formData.email) {
+        alert('Please fill in all required fields.');
+        return false;
     }
+
+    console.log('📧 Sending to Formspree...', formData);
+
+    fetch('https://formspree.io/f/mzdweann', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('✅ SUCCESS!');
+            showToast();
+            DOM.interestForm.reset();
+            setTimeout(closeFormModal, 1500);
+        } else {
+            console.error('❌ FAILED:', response.status);
+            alert('Error sending. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('❌ FAILED:', error);
+        alert('Error sending. Check console.');
+    });
+
     return false;
-}
+                                                           }
 
             function initObservers() {
                 const fadeObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('rcw-visible'); fadeObserver.unobserve(e.target); } }); }, { threshold: 0.1 });
