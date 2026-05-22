@@ -417,16 +417,25 @@
 
             function toggleMenu() { DOM.menuOverlay.classList.toggle('rcw-active'); DOM.menuBtn.classList.toggle('rcw-active'); DOM.body.classList.toggle('rcw-menu-open'); }
 
-            function openPreviewModal(id) {
-                const t = templatesData.find(x => x.id === id);
-                if(!t) return;
-                let grid = '';
-                if(t.previewImages && t.previewImages.length) {
-                    grid = `<div class="rcw-preview-grid">${t.previewImages.map(img => `<div class="rcw-preview-grid-item" onclick="rcwApp.openZoom('${img}')"><img src="${img}" loading="lazy" alt="Preview"></div>`).join('')}</div>`;
-                }
-                DOM.previewContent.innerHTML = `<div class="rcw-preview-header"><h2 class="rcw-preview-title">${t.title}</h2><p class="rcw-preview-desc">${t.desc}</p></div>${grid}<div class="rcw-preview-description"><p>Premium cinematic website templates built for creators, brands, photographers, videographers, and digital businesses. Designed with smooth Netflix-style browsing, modern visuals, mobile optimization, and immersive media experiences that make your work stand out instantly.</p></div><div class="rcw-preview-contact"><p>📱 <strong>WhatsApp:</strong> <a href="https://wa.me/254711691608" target="_blank">0711691608</a></p><p>📧 <strong>Email:</strong> <a href="mailto:officialreinblacks@gmail.com">officialreinblacks@gmail.com</a></p><p style="margin-top:8px;font-size:0.85rem;">We are happy to be part of your journey!</p></div><div class="rcw-preview-actions"><button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal('${t.title.replace(/'/g, "\\'")}');rcwApp.closePreviewModal();">Submit Interest — ${t.title}</button></div>`;
-                DOM.previewModal.classList.add('rcw-active'); DOM.body.classList.add('rcw-modal-open');
-            }
+           function openPreviewModal(id) {
+    const t = templatesData.find(x => x.id === id);
+    if(!t) return;
+    let grid = '';
+    if(t.previewImages && t.previewImages.length) {
+        grid = `<div class="rcw-preview-grid">${t.previewImages.map(img => `<div class="rcw-preview-grid-item" onclick="rcwApp.openZoom('${img}')"><img src="${img}" loading="lazy" alt="Preview"></div>`).join('')}</div>`;
+    }
+    let liveDemoBtn = '';
+    if(t.id === 1) {
+        liveDemoBtn = `
+            <div style="margin-bottom: 16px;">
+                <a href="https://reinblacksltd.pages.dev/" target="_blank" class="rcw-btn rcw-btn-primary" style="width: 100%; text-align: center;">Press here to test the website live</a>
+            </div>
+            <p style="text-align: center; color: #888; font-size: 0.8rem; margin-bottom: 16px;">Note: unpublished</p>
+        `;
+    }
+    DOM.previewContent.innerHTML = `<div class="rcw-preview-header"><h2 class="rcw-preview-title">${t.title}</h2><p class="rcw-preview-desc">${t.desc}</p></div>${grid}${liveDemoBtn}<div class="rcw-preview-description"><p>Premium cinematic website templates built for creators, brands, photographers, videographers, and digital businesses. Designed with smooth Netflix-style browsing, modern visuals, mobile optimization, and immersive media experiences that make your work stand out instantly.</p></div><div class="rcw-preview-contact"><p>📱 <strong>WhatsApp:</strong> <a href="https://wa.me/254711691608" target="_blank">0711691608</a></p><p>📧 <strong>Email:</strong> <a href="mailto:officialreinblacks@gmail.com">officialreinblacks@gmail.com</a></p><p style="margin-top:8px;font-size:0.85rem;">We are happy to be part of your journey!</p></div><div class="rcw-preview-actions"><button class="rcw-btn rcw-btn-primary" onclick="rcwApp.openFormModal('${t.title.replace(/'/g, "\\'")}');rcwApp.closePreviewModal();">Submit Interest — ${t.title}</button></div>`;
+    DOM.previewModal.classList.add('rcw-active'); DOM.body.classList.add('rcw-modal-open');
+}
             function closePreviewModal() { DOM.previewModal.classList.remove('rcw-active'); if(!DOM.formModal.classList.contains('rcw-active')) DOM.body.classList.remove('rcw-modal-open'); }
 
             function populateFormSelect() { templatesData.forEach(t => { const o = document.createElement('option'); o.value = t.title; o.textContent = t.title; DOM.formTemplateSelect.appendChild(o); }); }
