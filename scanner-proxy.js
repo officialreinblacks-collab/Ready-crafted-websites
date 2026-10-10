@@ -8,7 +8,7 @@ const SYSTEM = 'You are a crypto market scanner. Input rows are [symbol, price, 
 const SYSTEM_G = 'You read one market gauge: a symbol with per-timeframe technical scores from -1 (strong sell) to +1 (strong buy), indicator buy/sell counts, and momentum delta. Reply with JSON only, no markdown: {"verdict":{"bias":"bull|bear|neutral","score":0-100,"why":"max 25 words","plan":"max 25 words on what to wait for or watch"}}. Use ONLY the given data. This is information, not financial advice.';
 const SYSTEM_C = 'You are a friendly trading-chart assistant inside a charting app. Chat naturally and keep each answer under 120 words. Use ONLY the chart data provided (symbol, timeframe, recent candles, indicators); if something is not in the data, say so. Explain levels, trend, momentum and risks. Never promise outcomes and never give financial advice; remind the user it is information only when they ask for trades.';
 const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const kvPut = (env, ...a) => env.AI_KV ? kvPut(env, ...a) : Promise.resolve();   // storage is optional
+const kvPut = (env, ...a) => env.AI_KV ? env.AI_KV.put(...a) : Promise.resolve();   // storage is optional
 const cfgGet = async env => {
   // SIMPLE SETUP: add one secret named API_KEY in Cloudflare (Settings -> Variables and Secrets). No storage needed.
   const base = { key: env.API_KEY, model: env.MODEL, alert: env.ALERT_URL, enabled: true };
@@ -20,6 +20,7 @@ export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     if (url.pathname === '/admin') return admin(req, env);
+    if (url.pathname === '/check') return check(env);
     const origin = req.headers.get('Origin') || '';
     const cors = { 'Access-Control-Allow-Origin': env.ALLOWED_ORIGIN || '*', 'Access-Control-Allow-Methods': 'POST,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Content-Type': 'application/json' };
     const out = o => new Response(JSON.stringify(o), { headers: cors });   // always HTTP 200, visitors never see raw errors
@@ -90,4 +91,28 @@ async function admin(req, env) {
   Model (optional)<input name=model value="${esc(cfg.model)}" placeholder="claude-sonnet-5-5" ${inp}>
   Phone alert URL when top-up needed (optional, e.g. https://ntfy.sh/your-topic)<input name=alert value="${esc(cfg.alert)}" ${inp}>
   <label><input type=checkbox name=enabled ${cfg.enabled === false ? '' : 'checked'}> AI scanner on</label><br><br><button style="padding:10px 18px">Save</button></form>`);
+}
+
+async function check(env) {   // open  https://YOUR-WORKER-LINK/check  in a browser to see why the AI is resting. Never shows the key.
+  const H = { 'Content-Type': 'text/plain;charset=utf-8', 'Cache-Control': 'no-store' };
+  const ck = new Request('https://ai-cache/check/' + Math.floor(Date.now() / 60000));
+  const hit = await caches.default.match(ck); if (hit) return new Response(await hit.text(), { headers: H });
+  const cfg = await cfgGet(env); let msg;
+  if (!cfg.key) msg = 'Worker is live, but NO KEY was found.\nAdd a secret named exactly API_KEY (capital letters) in Settings > Variables and Secrets, paste your key as the value, then press Deploy.';
+  else {
+    const groq = cfg.key.startsWith('gsk_');
+    try {
+      const r = groq
+        ? await fetch('https://api.groq.com/openai/v1/chat/completions', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + cfg.key }, body: JSON.stringify({ model: cfg.model || 'llama-3.3-70b-versatile', max_tokens: 5, messages: [{ role: 'user', content: 'hi' }] }) })
+        : await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': cfg.key, 'anthropic-version': '2023-06-01' }, body: JSON.stringify({ model: cfg.model || 'claude-sonnet-5-5', max_tokens: 5, messages: [{ role: 'user', content: 'hi' }] }) });
+      const hint = r.status === 200 ? 'AI WORKS. If the app still says "short break", the link in index.html is wrong or you are viewing an old copy (reload the page).'
+        : r.status === 401 || r.status === 403 ? 'The provider REJECTED the key: wrong, revoked or expired. Create a new key and update the API_KEY secret, then Deploy.'
+        : r.status === 429 ? 'Provider says LIMIT or CREDIT reached on your account.'
+        : r.status === 400 || r.status === 404 ? 'Model name problem. Delete the MODEL variable (if you added one) and Deploy.'
+        : 'Unexpected provider reply.';
+      msg = 'Worker is live. Key found (' + (groq ? 'Groq' : 'Anthropic') + ').\nProvider answered: ' + r.status + '\n' + hint;
+    } catch (e) { msg = 'Worker is live and key found, but the provider could not be reached. Try again in a minute.'; }
+  }
+  await caches.default.put(ck, new Response(msg, { headers: { 'Cache-Control': 'max-age=60' } }));
+  return new Response(msg, { headers: H });
 }
